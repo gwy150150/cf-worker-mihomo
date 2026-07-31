@@ -1,4 +1,4 @@
-Name: SubCloud
+name: SubCloud
 
 on:
     push:
