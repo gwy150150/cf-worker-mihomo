@@ -61,7 +61,7 @@ jobs:
               id: update
               if: steps.check_submodules.outputs.has_updates == 'true' && github.event_name != 'push'
               run: |
-                  pnpm version patch --no-git-tag-version
+                  node -e "const pkg = require('./package.json'); const v = pkg.version.split('.'); v[2] = parseInt(v[2]) + 1; pkg.version = v.join('.'); require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 4));"
                   pnpm i --no-frozen-lockfile
                   pnpm build
                   TAG="v$(node -p "require('./package.json').version")"
@@ -127,3 +127,4 @@ jobs:
                   git commit -m "release: ${{ steps.tag.outputs.release_tag }}"
                   git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
                   git push -f -u origin release
+
